@@ -8,7 +8,6 @@ import com.onlypromise.promise.repository.UserRepository;
 import com.onlypromise.promise.DTO.web.LoginDTO;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

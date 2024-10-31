@@ -4,7 +4,6 @@ import com.onlypromise.promise.DTO.web.AdminHomeDTO;
 import com.onlypromise.promise.DTO.web.reportAdminDTO;
 import com.onlypromise.promise.domain.Report;
 import com.onlypromise.promise.domain.User;
-import com.onlypromise.promise.domain.enumeration.Role;
 import com.onlypromise.promise.service.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +34,6 @@ public class adminHomeController {
     private final MedicationLogService medicationLogService;
     private final ReportService reportService;
 
-    private final DateTimeFormatter dtoFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private final DateTimeFormatter logFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    private final LocalDateTime startDateTime = LocalDateTime.of(2024, 10, 14, 0, 0); //관찰 시작일
-    private final LocalDateTime endDateTime = LocalDateTime.now(); // 현재 시간까지
-
     @Value("${app.log.directory:/spring-boot/log}") //app.log.directory 가 설정되지 않을 경우 기본 경로 설정
     private String LOG_DIRECTORY;
 
@@ -50,13 +43,15 @@ public class adminHomeController {
         User user = (User) session.getAttribute("user");
         if(user == null) return "redirect:/login";
 
+        // 2024년 10월 14일 00:00부터 현재까지의 범위 지정
+        LocalDateTime startDateTime = LocalDateTime.of(2024, 10, 14, 0, 0); //관찰 시작일
+        LocalDateTime endDateTime = LocalDateTime.now(); // 현재 시간까지
 
         // LocalDate로 변환하여 두 날짜의 차이를 구함
         long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(startDateTime.toLocalDate(), endDateTime.toLocalDate()) + 1; // 관찰 시작일부터 1일차이기 때문에 1을 더함
 
         List<AdminHomeDTO> dtoList = new ArrayList<>();
         double totalPercent = 0.0;
-        int countUser = 0;
         DecimalFormat df = new DecimalFormat("#.##"); // 소수점 두 자리까지만 표현
         for(User u : userService.findAllUser())
         {
@@ -66,7 +61,7 @@ public class adminHomeController {
             newDto.setName(u.getName());
             newDto.setAge(u.getAge());
             newDto.setBottleId(u.getBottleId());
-            int notificationSize = notificationService.findNotificationByUser(u).size(); // 알림 개수 가져옴
+            int notificationSize = notificationService.findNotificationByUser(u).size();
             newDto.setTotalMedicine(notificationSize);
 
             if (daysBetween == 0 || notificationSize == 0) newDto.setPercent(0); // 알림이 없는 경우 0%로 설정
@@ -76,26 +71,21 @@ public class adminHomeController {
                 double percent = (logSize / (daysBetween * (double) notificationSize)) * 100;
                 newDto.setLogSize(logSize);
                 newDto.setPercent(Double.parseDouble(df.format(percent)));
-
-                if (newDto.getRole() != Role.admin)
-                {
-                    totalPercent += newDto.getPercent();
-                    ++countUser;
-                }
+                totalPercent += newDto.getPercent();
             }
             dtoList.add(newDto);
         }
-        totalPercent = countUser > 0 ? Double.parseDouble(df.format(totalPercent / countUser)) : 0; //관리자(테스트) 계정의 복약 순응도는 반영 안함
+        totalPercent = Double.parseDouble(df.format((totalPercent - dtoList.get(0).getPercent() - dtoList.get(1).getPercent() - dtoList.get(2).getPercent()) / (dtoList.size() - 3))); //관리자(테스트) 계정의 복약 순응도는 반영 안함
 
         List<reportAdminDTO> reportList = new ArrayList<>();
-
+        DateTimeFormatter userDtoFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         for(Report r : reportService.findAllReport())
         {
             reportAdminDTO newReportDto = new reportAdminDTO();
             newReportDto.setId(r.getId());
             newReportDto.setUserName(r.getUser().getName());
             newReportDto.setTitle(r.getTitle());
-            newReportDto.setCreatAt(r.getCreateAt().format(dtoFormatter));
+            newReportDto.setCreatAt(r.getCreateAt().format(userDtoFormatter));
             reportList.add(newReportDto);
         }
 
@@ -107,7 +97,9 @@ public class adminHomeController {
         {
             for (File file : logDir.listFiles()) if (file.isFile() && file.getName().startsWith("info-")) logFiles.add(file.getName());
         }
+
         // 로그 파일 이름을 날짜와 순번에 따라 정렬
+        DateTimeFormatter logFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         logFiles.sort(Comparator.comparing((String fileName) -> {
             String datePart = fileName.substring(5, 15); // 날짜 부분 추출
             return LocalDate.parse(datePart, logFormatter);
