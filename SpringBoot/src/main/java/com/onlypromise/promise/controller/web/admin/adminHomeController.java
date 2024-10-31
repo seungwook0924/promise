@@ -44,7 +44,7 @@ public class adminHomeController {
         if(user == null) return "redirect:/login";
 
         // 2024년 10월 14일 00:00부터 현재까지의 범위 지정
-        LocalDateTime startDateTime = LocalDateTime.of(2024, 10, 14, 0, 0); //관찰 시작일
+        LocalDateTime startDateTime = LocalDateTime.of(2024, 10, 28, 0, 0); //관찰 시작일
         LocalDateTime endDateTime = LocalDateTime.now(); // 현재 시간까지
 
         // LocalDate로 변환하여 두 날짜의 차이를 구함
@@ -76,7 +76,6 @@ public class adminHomeController {
             dtoList.add(newDto);
         }
         totalPercent = Double.parseDouble(df.format((totalPercent - dtoList.get(0).getPercent() - dtoList.get(1).getPercent() - dtoList.get(2).getPercent()) / (dtoList.size() - 3))); //관리자(테스트) 계정의 복약 순응도는 반영 안함
-
         List<reportAdminDTO> reportList = new ArrayList<>();
         DateTimeFormatter userDtoFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         for(Report r : reportService.findAllReport())
