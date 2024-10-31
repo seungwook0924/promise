@@ -66,7 +66,7 @@ public class adminHomeController {
             newDto.setName(u.getName());
             newDto.setAge(u.getAge());
             newDto.setBottleId(u.getBottleId());
-            int notificationSize = notificationService.findNotificationByUser(u).size();
+            int notificationSize = notificationService.findNotificationByUser(u).size(); // 알림 개수 가져옴
             newDto.setTotalMedicine(notificationSize);
 
             if (daysBetween == 0 || notificationSize == 0) newDto.setPercent(0); // 알림이 없는 경우 0%로 설정
