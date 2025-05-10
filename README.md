@@ -67,7 +67,17 @@
 <u>**부가 기능은 웹 페이지에서 제공**</u>
 
 <br>
+<br>
 
+## 디자인
+### 애플리케이션
+<img width="962" alt="SCR-20250510-ltdl" src="https://github.com/user-attachments/assets/0a5322cf-18ba-42e0-907f-013307895da4" />
+
+### 스마트 약통
+<img width="954" alt="SCR-20250510-ltko" src="https://github.com/user-attachments/assets/12e97ee4-d746-4e64-ab47-b2f5abcc3005" />
+
+
+<br>
 <br>
 
 ## 시스템 아키텍쳐
