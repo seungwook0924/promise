@@ -4,8 +4,9 @@
 # [강원혁신플랫폼] 문제 해결을 위한 RIS-ING 동아리(일본 여행권 수상작)
 
 ## 팀명 : 약속(藥束)
-
+![IMG_1773](https://github.com/user-attachments/assets/1f2a801a-82ae-48e5-87e9-903072b36144)
 ![IMG_0805](./images/README/IMG_0805.JPG)
+
 
 |      | 이름   | 역할                  |
 | ---- | ------ | --------------------- |
