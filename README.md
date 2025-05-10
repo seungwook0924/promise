@@ -74,7 +74,8 @@
 <img width="962" alt="SCR-20250510-ltdl" src="https://github.com/user-attachments/assets/0a5322cf-18ba-42e0-907f-013307895da4" />
 
 ### 스마트 약통
-<img width="954" alt="SCR-20250510-ltko" src="https://github.com/user-attachments/assets/12e97ee4-d746-4e64-ab47-b2f5abcc3005" />
+<img width="959" alt="SCR-20250510-luud" src="https://github.com/user-attachments/assets/efbd68f5-f0c0-48d7-81ac-6aae44f9b6eb" />
+
 
 
 <br>
